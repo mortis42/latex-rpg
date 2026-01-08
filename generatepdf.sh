@@ -8,7 +8,7 @@ if ! command -v pandoc >/dev/null 2>&1; then
 fi
 
 echo -n "Generating pdf"
-pandoc main.md --no-highlight --template=tex/template.tex --pdf-engine=xelatex --filter pandoc-latex-environment --lua-filter=filters/filters.lua -o output/main.pdf 2>/dev/null &
+pandoc main.md --syntax-highlighting=none --template=tex/template.tex --pdf-engine=xelatex --filter pandoc-latex-environment --lua-filter=filters/filters.lua -o output/main.pdf 2>/dev/null &
 pid=$!
 
 while kill -0 $pid 2>/dev/null; do

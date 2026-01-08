@@ -10,7 +10,7 @@ if errorlevel 1 (
 )
 
 echo|set /p="Generating pdf"
-start /b "" cmd /c "pandoc main.md --no-highlight --template=tex/template.tex --pdf-engine=xelatex --filter pandoc-latex-environment --lua-filter=filters/filters.lua -o output\main.pdf 2>nul"
+start /b "" cmd /c "pandoc main.md --syntax-highlighting=none --template=tex/template.tex --pdf-engine=xelatex --filter pandoc-latex-environment --lua-filter=filters/filters.lua -o output\main.pdf 2>nul"
 :waitloop
 timeout /t 1 >nul
 tasklist | find /i "pandoc.exe" >nul
