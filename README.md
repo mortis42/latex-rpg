@@ -71,8 +71,9 @@ Use the following YAML at the top of main.md to set the title, subtitle, and aut
 
 - Set `toc: true` to enable a table of contents.
 - Do not remove the mandatory fields for the LaTeX environment.
-- If `cover-image:` is set to an image file, then a page displaying the cover will be generated before the Frontpage.
-  - If 'cover-title' is set to true, then a box with the title, subtitle, and author will added to the Frontpage.
+- If `cover-image:` is set, then a page displaying the cover will be generated before the Frontpage with the title, subtitle, and author centered.
+  - The image chosen will stretch (distort) to perfectly hit all four corners regardless of ratio.
+  - The Text will be displayed in white with a black outline.
 
 ```yaml
 ---
