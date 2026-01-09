@@ -18,6 +18,8 @@
 \usepackage{graphicx}
 \usepackage{tabulary}
 \usepackage{array}
+\usepackage{eso-pic}
+\usepackage{xifthen}
 
 % --- Page config ---
 \geometry{a4paper, margin=1.6cm}
@@ -33,16 +35,16 @@
 \normalsize
 \renewcommand{\baselinestretch}{1.2}
 \setmainfont{Montserrat-Regular.ttf}[
-    Path = ./fonts/,
+    Path =./fonts/,
     ItalicFont = Merriweather-Italic.ttf,
     BoldFont = Montserrat-SemiBold.ttf,
     BoldItalicFont = Merriweather-BoldItalic.ttf
 ]
 \newfontfamily\montserratThin{Montserrat-Thin.ttf}[
-    Path = ./fonts/,
+    Path =./fonts/,
 ]
 \newfontfamily\montserratLight{Montserrat-Light.ttf}[
-    Path = ./fonts/,
+    Path =./fonts/,
 ]
 % Try to load Eveleth-Regular.ttf, if fails load League-Spartan.ttf
 \IfFontExistsTF{./fonts/Eveleth-Regular.ttf}{
@@ -181,6 +183,40 @@
 \setlength{\leftmargini}{1em}
 \setlength{\leftmarginii}{1em}
 
+% --- Coverpage (Updated with Toggle) ---
+\newcommand{\coverpage}[5]{
+    \thispagestyle{empty}
+    \AddToShipoutPictureBG*{
+        \AtPageLowerLeft{%
+            \includegraphics[width=\paperwidth,height=\paperheight]{#1}%
+        }%
+    }
+    
+    % Check if the 5th argument (cover-title) is "true"
+    \ifthenelse{\equal{#5}{true}}{
+        \vspace*{0.1\textheight} % Positioning it in the upper third
+        \begin{center}
+            \begin{tcolorbox}[
+                enhanced,
+                colback=black,
+                colframe=white,
+                width=0.85\linewidth,
+                drop large lifted shadow=black,
+                halign=flush center,
+            ]
+                {\eveleth\fontsize{36pt}{42pt}\selectfont\color{white}\MakeTextUppercase{#2}\par}\vspace{1em}
+                {\large\color{white}\MakeUppercase{#3}}\\[2em]
+                {\normalsize\color{white} #4}
+            \end{tcolorbox}
+        \end{center}
+    }{
+        \mbox{}
+    }
+    
+    \vspace*{\fill}
+    \clearpage
+}
+
 % --- Frontpage ---
 \newcommand{\frontpage}[3]{%
     \begin{titlepage}
@@ -224,7 +260,12 @@ $endif$
 
 \begin{document}
 
-% Frontpage
+% 1. Optional Cover Image
+$if(cover-image)$
+    \coverpage{$cover-image$}{$title$}{$subtitle$}{$author$}{$cover-title$}
+$endif$
+
+% 2. Internal Title Page
 $if(title)$
     \frontpage{$title$}{$subtitle$}{$author$}
 $endif$

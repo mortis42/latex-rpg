@@ -5,6 +5,7 @@ This project provides a modern workflow to create beautiful, two-column PDF docu
 See the [example module](output/example.pdf)!
 
 ## Features
+
 - Write your campaign in Markdown: Easy, readable, and portable.
 - Automatic conversion to PDF: Produces a professionally styled, two-column PDF.
 - Custom quotes and boxes: Use simple Markdown syntax to create visually distinct sections.
@@ -45,17 +46,21 @@ See the [example module](output/example.pdf)!
 1. Install [Pandoc](https://pandoc.org/installing.html) (Make sure Pandoc is available in your system’s PATH.)
 2. Install LaTeX
     - **Linux**: Install TeX Live or another LaTeX distribution.
+
       ```
       sudo apt install texlive-xetex
       ```
+
     - **Mac**: Install MacTeX from [tug.org](https://www.tug.org/mactex/).
     - **Windows**: Install MiKTeX from [miktex.org](https://miktex.org/download).
 3. Install pandoc-latex-environment filter
    1. Install [pipx](https://pipx.pypa.io/en/stable/installation/) if you haven't already.
    2. Run the following command to install the filter:
+
    ```
    pipx install pandoc-latex-environment
    ```
+
 4. Clone this repository or download the files to your local machine.
 
 ## Writing Your Campaign
@@ -63,8 +68,11 @@ See the [example module](output/example.pdf)!
 Write your content in `main.md` using standard Markdown.
 
 Use the following YAML at the top of main.md to set the title, subtitle, and author:
-  - Set `toc: true` to enable a table of contents.
-  - Do not remove the mandatory fields for the LaTeX environment.
+
+- Set `toc: true` to enable a table of contents.
+- Do not remove the mandatory fields for the LaTeX environment.
+- If `cover-image:` is set to an image file, then a page displaying the cover will be generated before the Frontpage.
+  - If 'cover-title' is set to true, then a box with the title, subtitle, and author will added to the Frontpage.
 
 ```yaml
 ---
@@ -72,6 +80,7 @@ title: Title of the Campaign
 subtitle: Subtitle of the Campaign
 author: Name of the Author
 toc: false
+cover-image: images/cover.png
 # Mandatory fields. Please do not remove.
 pandoc-latex-environment:
   squarebox: [squarebox]
@@ -83,6 +92,7 @@ pandoc-latex-environment:
 
 - Place your images in the `images/` directory.
 - To add images, use the following syntax:
+
 ```markdown
 ![](images/filename.ext)
 ```
@@ -91,13 +101,14 @@ pandoc-latex-environment:
 
 - Be cautious with full-page elements, as they will break the two-column layout and start a new page.
 - To add a full-page element, use the `fullpagestart` and `fullpageend` commands:
+
 ```markdown
 \fullpagestart
 
 This is a full-page element. It will take up the entire page, breaking the two-column layout.
 
 | Header 1 | Header 2 | Header 3 | Header 4 | Header 5 | Header 6 | Header 7 | Header 8 | Header 9 |
-|----------|----------|----------|----------|----------|----------|----------|----------|----------|
+| -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
 | Item 1   | Item 2   | Item 3   | Item 4   | Item 5   | Item 6   | Item 7   | Item 8   | Item 9   |
 | Item 4   | Item 5   | Item 6   | Item 7   | Item 8   | Item 9   | Item 10  | Item 11  | Item 12  |
 | Item 7   | Item 8   | Item 9   | Item 10  | Item 11  | Item 12  | Item 13  | Item 14  | Item 15  |
@@ -158,6 +169,7 @@ features:
 ```
 
 ## Environments
+
 - To display a nice styled environment box, use the `environment` class:
   - The `name`, `type`, `description`, `impulses`, `dificulty` and `adversaries` fields are mandatory.
   - The `features` field is optional.
@@ -179,24 +191,31 @@ features:
 ## Generating the PDF
 
 ### Option 1: Run the script (recommended)
+
 - Windows: Double-click generatepdf.bat or run it from the command prompt.
 - Linux/Mac: Open a terminal, navigate to the project folder, and run:
+
     ```bash
     ./generatepdf.sh
     ```
+
 The script will:
+
 - Check if Pandoc is installed.
 - Convert input/document.md to output/document.pdf using your template and filters.
 
 ### Option 2: Run Pandoc manually
+
 From the project root, run:
 
 1. Run the following command to build the .html file
+
 ```
 pandoc main.md --no-highlight --template=tex/template.tex --pdf-engine=xelatex --filter pandoc-latex-environment --lua-filter=filters/filters.lua -o output/main.pdf
 ```
 
 ## Helpful Tips
+
 - Images: Place all images in input/images/ and reference them as images/filename.ext in your Markdown.
 - Adversaries and custom blocks: Use the provided YAML/Markdown syntax for easy entry and automatic styling.
 - Troubleshooting: If you get errors, ensure Pandoc and LaTeX are correctly installed and that your image paths are correct.
@@ -212,6 +231,7 @@ For more details, see the [full license text](https://www.gnu.org/licenses/gpl-3
 This project is not associated with or endorsed by the creators of Critical Role, Darrington Press or any other commercial entity. It is an independent project created for educational and personal use.
 
 ### This template uses:
+
 - Montserrat font (Google Fonts, SIL Open Font License)
 - Merriweather font (Google Fonts, SIL Open Font License)
 - Eveleth Clean Regular (commercial font, not included—users must provide their own licensed copy).
