@@ -46,11 +46,18 @@
 \newfontfamily\montserratLight{Montserrat-Light.ttf}[
     Path =./fonts/,
 ]
-% Try to load Eveleth-Regular.ttf, if fails load League-Spartan.ttf
+% Try to load Eveleth Regular font, if fails load League Spartan font
+% 1. Try Eveleth-Regular.ttf
 \IfFontExistsTF{./fonts/Eveleth-Regular.ttf}{
     \newfontfamily\eveleth{Eveleth-Regular.ttf}[Path=./fonts/]
 }{
-    \newfontfamily\eveleth{LeagueSpartan-Extrabold.ttf}[Path=./fonts/]
+    % 2. If no Eveleth-Regular.ttf, try Eveleth-Regular.otf
+    \IfFontExistsTF{./fonts/Eveleth-Regular.otf}{
+        \newfontfamily\eveleth{Eveleth-Regular.otf}[Path=./fonts/]
+    }{
+        % 3. Fallback to League Spartan
+        \newfontfamily\eveleth{LeagueSpartan-Extrabold.ttf}[Path=./fonts/]
+    }
 }
 
 % --- Colors ---
