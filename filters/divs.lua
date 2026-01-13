@@ -2,7 +2,9 @@
 
 -- Function to clean text for LaTeX
 local function clean_latex(s)
-    if not s then return "" end
+    if not s then
+        return ""
+    end
     s = s:gsub("\n", " "):gsub("\\", "\\textbackslash{}"):gsub("[{}]", "")
     return s
 end
@@ -28,7 +30,9 @@ function parse_yaml(text)
     local current_key = nil
     for line in text:gmatch("[^\r\n]+") do
         -- Skip empty lines
-        if line:match("^%s*$") then goto continue end
+        if line:match("^%s*$") then
+            goto continue
+        end
         -- List item (indented with -)
         local item = line:match("^%s*%-%s*(.+)$")
         if item and current_key then
@@ -69,22 +73,23 @@ local function process_namevalue(process_namevalue)
     end
 end
 
+function process_yaml_boxes(elem)
 -- Adversaries filter
-function Div(elem)
     if elem.classes:includes('adversary') then
         -- Extract the content as YAML text with newlines
         local yaml_text = ""
         for _, block in ipairs(elem.content) do
-            if block.t == "Para" then
+            -- This handles both "Para" and "Plain" blocks correctly
+            if block.t == "Para" or block.t == "Plain" then
                 yaml_text = yaml_text .. para_to_yaml(block) .. "\n"
-            elseif block.t == "Plain" then
-                yaml_text = yaml_text .. para_to_yaml({content = block.content}) .. "\n"
             end
         end
 
         -- Parse the YAML content to a Lua table
         local data = parse_yaml(yaml_text)
-        if not data then return end
+        if not data then
+            return
+        end
 
         -- Clean all main fields
         local name = clean_latex(data.name or "")
@@ -131,40 +136,40 @@ function Div(elem)
         end
 
         -- Generate the main attributes block
-        local adversaryinnerbox_latex = "\\textbf{Difficulty:} " .. difficulty .. " | " ..
-            "\\textbf{Thresholds:} " .. thresholds .. " | " ..
-            "\\textbf{HP:} " .. hp .. " | " ..
+        local adversaryinnerbox_latex = "\\textbf{Difficulty:} " .. difficulty .. " | " .. "\\textbf{Thresholds:} " ..
+                                            thresholds .. " | " .. "\\textbf{HP:} " .. hp .. " | " ..
             "\\textbf{Stress:} " .. stress .. "\n\\par\\smallskip\n\n"
 
         adversaryinnerbox_latex = adversaryinnerbox_latex .. "\\textsc{ATK:} " .. atk .. " | " .. weapons .. "\n"
 
         if experience ~= "" then
             adversaryinnerbox_latex = adversaryinnerbox_latex ..
-                "\\par\\smallskip \\myseparator \\par\\smallskip \\textbf{Experience}: " .. experience .. "\n"
+                                          "\\par\\smallskip \\myseparator \\par\\smallskip \\textbf{Experience}: " ..
+                                          experience .. "\n"
         end
 
         -- Build the LaTeX command with cleaned arguments
-        local latex = string.format(
-            "\\adversary{%s}{%s}{%s}{%s}{%s}{%s}",
-            name, adv_type, description, tactics, adversaryinnerbox_latex, features_latex
-        )
+        local latex = string.format("\\adversary{%s}{%s}{%s}{%s}{%s}{%s}", name, adv_type, description, tactics,
+            adversaryinnerbox_latex, features_latex)
 
         return pandoc.RawBlock("latex", latex)
     end
+    -- Environments filter
     if elem.classes:includes('environment') then
         -- Extract the content as YAML text with newlines
         local yaml_text = ""
         for _, block in ipairs(elem.content) do
-            if block.t == "Para" then
+            -- This handles both "Para" and "Plain" blocks correctly
+            if block.t == "Para" or block.t == "Plain" then
                 yaml_text = yaml_text .. para_to_yaml(block) .. "\n"
-            elseif block.t == "Plain" then
-                yaml_text = yaml_text .. para_to_yaml({content = block.content}) .. "\n"
             end
         end
 
         -- Parse the YAML content to a Lua table
         local data = parse_yaml(yaml_text)
-        if not data then return end
+        if not data then
+            return
+        end
 
         -- Clean all main fields
         local name = clean_latex(data.name or "")
@@ -196,13 +201,12 @@ function Div(elem)
 
         -- Generate the main attributes block
         local environmentinnerbox_latex = "\\textbf{Difficulty:} " .. difficulty .. " | " ..
-            "\\textbf{Potential adversaries:} " .. adversaries .. "\n\\par\\smallskip\n\n"
+                                              "\\textbf{Potential adversaries:} " .. adversaries ..
+                                              "\n\\par\\smallskip\n\n"
 
         -- Build the LaTeX command with cleaned arguments
-        local latex = string.format(
-            "\\environment{%s}{%s}{%s}{%s}{%s}{%s}",
-            name, env_type, description, impulses, environmentinnerbox_latex, features_latex
-        )
+        local latex = string.format("\\environment{%s}{%s}{%s}{%s}{%s}{%s}", name, env_type, description, impulses,
+            environmentinnerbox_latex, features_latex)
 
         return pandoc.RawBlock("latex", latex)
     end

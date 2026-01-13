@@ -3,7 +3,9 @@ function Table(elem)
     local header = simple.header
     local rows = simple.rows
     local cols = #header > 0 and #header or (#rows[1] or 0)
-    if cols == 0 then return elem end
+    if cols == 0 then
+        return elem
+    end
 
     local col_types = {}
     for i, h in ipairs(header) do
@@ -18,7 +20,7 @@ function Table(elem)
     end
     local tabular_cols = table.concat(col_types, "")
 
-    local latex = "\\vspace{1em}\n"
+    local latex = "\\vspace{0.5em}\n"
     latex = latex .. "{\\scriptsize\n"
     latex = latex .. "\\begin{center}\n"
     latex = latex .. "\\renewcommand{\\arraystretch}{1.25}\n"
@@ -27,7 +29,11 @@ function Table(elem)
         latex = latex .. "\\rowcolor{tableheaderbg}"
         for i, h in ipairs(header) do
             latex = latex .. "{\\color{white}\\textbf{" .. pandoc.utils.stringify(h) .. "}}"
-            if i < cols then latex = latex .. " & " else latex = latex .. " \\\\\n" end
+            if i < cols then
+                latex = latex .. " & "
+            else
+                latex = latex .. " \\\\\n"
+            end
         end
     end
     for row_index, row in ipairs(rows) do
@@ -37,7 +43,11 @@ function Table(elem)
         for i, cell in ipairs(row) do
             local cell_content = pandoc.utils.stringify(cell):gsub("\n", "\\newline ")
             latex = latex .. cell_content
-            if i < cols then latex = latex .. " & " else latex = latex .. " \\\\\n" end
+            if i < cols then
+                latex = latex .. " & "
+            else
+                latex = latex .. " \\\\\n"
+            end
         end
     end
     latex = latex .. "\\end{tabulary}\n"

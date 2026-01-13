@@ -1,0 +1,74 @@
+\newtcolorbox{sidebarbox}{
+    enhanced,
+    colback=sidebarbgcolor,
+    borderline north={.75pt}{0pt}{sidebarbordercolor},
+    borderline south={.75pt}{0pt}{sidebarbordercolor},
+    frame hidden,
+    boxrule=0.5pt,
+    left=0.5em,
+    right=0.5em,
+    top=0.5em,
+    bottom=0.5em,
+    before skip=1em,
+    after skip=1em,
+}
+
+\newtcolorbox{rulesbox}{
+    enhanced,
+    colback=rulesbordercolor,
+    colframe=rulesbordercolor,
+    boxrule=0.5pt,
+    left=0.5em,
+    right=0.5em,
+    top=0.5em,
+    bottom=0.5em,
+    before skip=1em,
+    after skip=1em,
+}
+
+\newtcolorbox{tbox}{
+    enhanced,
+    frame hidden,
+    interior empty,
+    boxrule=0.5pt,
+    left=0.5em,
+    right=0.5em,
+    top=0.5em,
+    bottom=-0.5em,
+    before skip=1em,
+    after skip=1em,
+    sharp corners,
+}
+
+\newcommand{\sidebar}[2]{%
+    \begin{sidebarbox}
+        \ifthenelse{\isempty{#1}}{}{%
+            % Add to TOC with "Sidebar:" prefix
+            \addcontentsline{toc}{subsection}{Sidebar: #1}%
+            {\eveleth\color{h2text}\large\center\MakeTextUppercase{#1}\par\smallskip}
+        }%
+        {\color{maintext}\normalfont\fontsize{9pt}{11pt}\selectfont #2}
+    \end{sidebarbox}
+}
+
+\newcommand{\rules}[2]{%
+    \begin{rulesbox}
+        \ifthenelse{\isempty{#1}}{}{%
+            % Add to TOC with "Optional Rules:" prefix
+            \addcontentsline{toc}{subsection}{Optional Rules: #1}%
+            {\eveleth\color{white}\large\center\MakeTextUppercase{#1}\par\smallskip}
+        }%
+        {\color{white}\normalfont\fontsize{9pt}{11pt}\selectfont #2}
+    \end{rulesbox}
+}
+
+\newcommand{\tablebox}[2]{%
+    \begin{tbox}
+        \ifthenelse{\isempty{#1}}{}{%
+            % Add to TOC with "Table:" prefix
+            \addcontentsline{toc}{subsection}{Table: #1}%
+            {\eveleth\color{h2text}\large\center\MakeTextUppercase{#1}\par\smallskip}
+        }%
+        {\color{maintext}\normalfont\fontsize{9pt}{11pt}\selectfont #2}
+    \end{tbox}
+}

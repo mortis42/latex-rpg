@@ -1,4 +1,4 @@
-\documentclass[11pt,a4paper]{article}
+\documentclass[11pt,a4paper]{book}
 
 % --- Packages ---
 \usepackage{fontspec}
@@ -20,38 +20,88 @@
 \usepackage{array}
 \usepackage{eso-pic}
 \usepackage{xifthen}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{} % Clear all default headers and footers
+
+% This forces the header/rule to span the entire geometry width
+\fancyhfoffset[L,R]{0pt}
+
+% Re-calculate the headwidth to ensure it fills the margins
+\setlength{\headwidth}{\textwidth}
+
+% --- Header Config ---
+% Even Pages: Book Title on the inside (Right), Page Number on the outside (Left)
+\fancyhead[LE]{\thepage}
+\fancyhead[RE]{\itshape $title$} % Pulls your title from YAML
+
+% Odd Pages: Section Title on the inside (Left), Page Number on the outside (Right)
+\fancyhead[RO]{\thepage}
+\fancyhead[LO]{\itshape\leftmark}
+
+
+% Remove the horizontal line if you prefer a clean look
+\renewcommand{\headrulewidth}{0.4pt} 
+
+% Redefine plain style to remove page numbers from chapter starting pages
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \renewcommand{\headrulewidth}{0pt}
+}
 
 % --- Page config ---
-\geometry{a4paper, margin=1.6cm}
+\geometry{
+    a4paper,
+    inner=2.5cm,            % More space for the binding
+    outer=1.6cm,            % margin
+    top=1.6cm,
+    bottom=1.6cm,
+    bindingoffset=0.5cm,    % Extra buffer for the physical glue/stitching
+    twoside                 % Crucial for alternating the inner margin
+}
 \setlength{\columnsep}{1.5em}
 \newcommand{\pandocbounded}[1]{#1}
+
+% --- Clear double page redefinition ---
+\makeatletter
+\def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else
+    \hbox{}
+    \thispagestyle{empty}
+    \newpage
+    \if@twocolumn\hbox{}\newpage\fi\fi\fi}
+\makeatother
 
 % --- Shaded environment ---
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{shaded}}{\end{shaded}}
 
 % --- Fonts ---
-\renewcommand{\normalsize}{\fontsize{8.5}{10}\selectfont}
+\renewcommand{\normalsize}{\fontsize{12}{14}\selectfont}
 \normalsize
 \renewcommand{\baselinestretch}{1.2}
 \setmainfont{Montserrat-Regular.ttf}[
-    Path =./fonts/,
-    ItalicFont = Merriweather-Italic.ttf,
+    Path = ./fonts/,
+    ItalicFont = Montserrat-MediumItalic.ttf,
     BoldFont = Montserrat-SemiBold.ttf,
-    BoldItalicFont = Merriweather-BoldItalic.ttf
+    BoldItalicFont = Montserrat-SemiBoldItalic.ttf
 ]
-\newfontfamily\montserratThin{Montserrat-Thin.ttf}[
-    Path =./fonts/,
+\newfontfamily\montserratThin{Montserrat-Light.ttf}[
+    Path = ./fonts/,
 ]
-\newfontfamily\montserratLight{Montserrat-Light.ttf}[
-    Path =./fonts/,
+\newfontfamily\montserratLight{Montserrat-Regular.ttf}[
+    Path = ./fonts/,
 ]
+\newfontfamily\montserratHeavy{Montserrat-Bold.ttf}[
+    Path = ./fonts/,
+]
+
 % Try to load Eveleth Regular font, if fails load League Spartan font
-% 1. Try Eveleth-Regular.ttf
+% 1. Try Eveleth .ttf
 \IfFontExistsTF{./fonts/Eveleth-Regular.ttf}{
     \newfontfamily\eveleth{Eveleth-Regular.ttf}[Path=./fonts/]
 }{
-    % 2. If no Eveleth-Regular.ttf, try Eveleth-Regular.otf
+    % 2. If no .ttf, try Eveleth .otf
     \IfFontExistsTF{./fonts/Eveleth-Regular.otf}{
         \newfontfamily\eveleth{Eveleth-Regular.otf}[Path=./fonts/]
     }{
@@ -61,23 +111,27 @@
 }
 
 % --- Colors ---
-\definecolor{maintext}{HTML}{000000}
-\definecolor{h1text}{HTML}{444444}
-\definecolor{h2text}{HTML}{3a6b7b}
-\definecolor{h3text}{HTML}{927421}
-\definecolor{h4text}{HTML}{3a6b7b}
-\definecolor{h4square}{HTML}{deb334}
-\definecolor{tableheaderbg}{HTML}{3a6b7b}
-\definecolor{tablerow}{HTML}{ebf0f1}
-\definecolor{white}{HTML}{ffffff}
-\definecolor{squareboxbg}{HTML}{f1ebf4}
-\definecolor{squareboxborder}{HTML}{4d2d63}
-\definecolor{roundedboxbg}{HTML}{dde2ed}
-\definecolor{quoteborder}{HTML}{deb334}
-\definecolor{adversarybordercolor}{HTML}{bcab84}
-\definecolor{adversarybgcolor}{HTML}{f4f0e5}
-\definecolor{environmentbordercolor}{HTML}{a3a3a3}
-\definecolor{environmentbgcolor}{HTML}{ededed}
+\definecolor{maintext}{HTML}{000000}                % #000000
+\definecolor{h1text}{HTML}{444444}                  % #444444
+\definecolor{h2text}{HTML}{3a6b7b}                  % #3a6b7b
+\definecolor{h3text}{HTML}{927421}                  % #927421
+\definecolor{h6text}{HTML}{3a6b7b}                  % #3a6b7b
+\definecolor{h6square}{HTML}{deb334}                % #deb334
+\definecolor{tableheaderbg}{HTML}{3a6b7b}           % #3a6b7b
+\definecolor{tablerow}{HTML}{ebf0f1}                % #ebf0f1
+\definecolor{white}{HTML}{ffffff}                   % #ffffff
+\definecolor{squareboxbg}{HTML}{f1ebf4}             % #f1ebf4
+\definecolor{squareboxborder}{HTML}{4d2d63}         % #4d2d63
+\definecolor{roundedboxbg}{HTML}{dde2ed}            % #dde2ed
+\definecolor{quoteborder}{HTML}{deb334}             % #deb334
+\definecolor{adversarybordercolor}{HTML}{bcab84}    % #bcab84
+\definecolor{adversarybgcolor}{HTML}{f4f0e5}        % #f4f0e5
+\definecolor{environmentbordercolor}{HTML}{a3a3a3}  % #a3a3a3
+\definecolor{environmentbgcolor}{HTML}{ededed}      % #ededed
+\definecolor{rulesbordercolor}{HTML}{055e21}        % #055e21
+\definecolor{rulesbgcolor}{HTML}{c2f5d2}            % #c2f5d2
+\definecolor{sidebarbordercolor}{HTML}{055a5e}      % #055a5e
+\definecolor{sidebarbgcolor}{HTML}{c2f1f3}          % #c2f1f3
 
 \color{maintext}
 
@@ -127,9 +181,10 @@
 
 % --- Blockquote ---
 \newtcolorbox{quotebox}{
-    colback=white,
+    % colback=white,
     enhanced,
     frame hidden,
+    interior empty,
     borderline west={2pt}{0pt}{quoteborder},
     left=1em,
     right=0em,
@@ -143,42 +198,76 @@
     {\begin{quotebox}}
     {\end{quotebox}}
 
+
+% --- Adversaries ---
+\input{tex/adversary}
+
+% --- Environments ---
+\input{tex/environment}
+
+% --- Sidebar ---
+\input{tex/sidebars}
+
 % --- Titles ---
 \setcounter{secnumdepth}{0}
 
 \titleformat{\section}
-    {\montserratThin\fontsize{24pt}{28pt}\selectfont\color{h1text}\MakeTextUppercase}
+    {\montserratLight\fontsize{24pt}{28pt}\selectfont\color{h1text}\MakeTextUppercase}
     {\thesection}
-    {1em}
     {}
+    {}
+    [\vspace{-1em}\rule{\linewidth}{0.3pt}] % Uncomment to add a thin line across the column
 \titleformat{\subsection}
-    {\eveleth\large\color{h2text}\MakeTextUppercase}
+    {\montserratHeavy\large\bfseries\color{h2text}\MakeTextUppercase}
     {\thesubsection}
     {1em}
     {}
 \titleformat{\subsubsection}
-    {\large\color{h3text}\MakeTextUppercase}
+    {\montserratHeavy\large\color{h3text}\MakeTextUppercase}
     {\thesubsubsection}
     {1em}
     {}
 
-\newcommand{\hfour}[1]{%
+% --- H4 Styling ---
+\titleformat{\paragraph}
+    {\montserratHeavy\normalsize\bfseries\color{h2text}\MakeTextUppercase}
+    {\theparagraph}
+    {1em}
+    {}
+\titlespacing*{\paragraph}
+    {0pt}{1.5ex plus 1ex minus .2ex}{0.5ex}
+
+% --- H5 Styling ---
+\titleformat{\subparagraph}
+    {\montserratLight\normalsize\itshape\color{h3text}}
+    {\thesubparagraph}
+    {1em}
+    {}
+\titlespacing*{\subparagraph}
+    {0pt}{1ex plus 0.5ex minus .2ex}{0.2ex}
+
+\newcommand{\hsix}[1]{%
     \needspace{4\baselineskip}%
     \vspace*{3pt}%
     {\fontsize{10pt}{11pt}\selectfont\bfseries
-    \raisebox{-0.1ex}{\textcolor{h4square}{\rule{1.5ex}{1.5ex}}}\hspace{0.45em}%
-    \color{h4text} #1%
+    \raisebox{-0.1ex}{\textcolor{h6square}{\rule{1.5ex}{1.5ex}}}\hspace{0.45em}%
+    \color{h6text} #1%
     \par}%
     \nopagebreak[4]%
     \vspace{3pt}%
 }
 
+% 4. Fix the Mark logic
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+% 5. Update your section command to feed the header
 \let\oldsection\section
 \renewcommand{\section}[1]{%
     \end{multicols*}
-    \vspace{1em}
+    \clearpage 
     \oldsection{#1}
-    \vspace{1em}
+    \sectionmark{#1} % This "pushes" the title to the header
+    \thispagestyle{plain} % <--- This hides the header on the start page
     \begin{multicols*}{2}
     \raggedcolumns
 }
@@ -191,6 +280,7 @@
 \setlength{\leftmarginii}{1em}
 
 % --- Coverpage (Updated with Toggle) ---
+
 \newcommand{\coverpage}[5]{
     \thispagestyle{empty}
     \AddToShipoutPictureBG*{
@@ -199,10 +289,10 @@
         }%
     }
     
-    % Check if the 5th argument (cover-title) is "true"
+    % Optional Title Box
     \ifthenelse{\equal{#5}{true}}{
         \vspace*{0.1\textheight} % Positioning it in the upper third
-        \begin{center}
+    \begin{center}
             \begin{tcolorbox}[
                 enhanced,
                 colback=black,
@@ -212,13 +302,15 @@
                 halign=flush center,
             ]
                 {\eveleth\fontsize{36pt}{42pt}\selectfont\color{white}\MakeTextUppercase{#2}\par}\vspace{1em}
+        
                 {\large\color{white}\MakeUppercase{#3}}\\[2em]
+        
                 {\normalsize\color{white} #4}
             \end{tcolorbox}
         \end{center}
     }{
         \mbox{}
-    }
+        }
     
     \vspace*{\fill}
     \clearpage
@@ -238,16 +330,26 @@
     \end{titlepage}
 }
 
-% --- Adversaries ---
-\input{tex/adversary}
+% --- Credits ---
+\makeatletter
+\newcommand{\credits}{%
+    {\montserratLight\fontsize{24pt}{28pt}\selectfont\MakeTextUppercase{\contentsname}}%
+    \@startcredits{credits}%
+}
+\makeatother
 
-% --- Environments ---
-\input{tex/environment}
+% --- Foreword ---
+\makeatletter
+\newcommand{\foreword}{%
+    {\montserratLight\fontsize{24pt}{28pt}\selectfont\MakeTextUppercase{\contentsname}}%
+    \@startforeword{foreword}%
+}
+\makeatother
 
 % --- Table of contents ---
 \makeatletter
 \renewcommand{\tableofcontents}{%
-    {\montserratThin\fontsize{24pt}{28pt}\selectfont\MakeTextUppercase{\contentsname}}%
+    {\montserratLight\fontsize{24pt}{28pt}\selectfont\MakeTextUppercase{\contentsname}}%
     \@starttoc{toc}%
 }
 \makeatother
@@ -269,26 +371,36 @@ $endif$
 
 % 1. Optional Cover Image
 $if(cover-image)$
-    \coverpage{$cover-image$}{$title$}{$subtitle$}{$author$}{$cover-title$}
-$endif$
+\coverpage{$cover-image$}{$title$}{$subtitle$}{$author$}{$if(cover-title)$true$else$false$endif$}
+$endif$%
 
 % 2. Internal Title Page
 $if(title)$
-    \frontpage{$title$}{$subtitle$}{$author$}
-$endif$
+\frontpage{$title$}{$subtitle$}{$author$}
+$endif$%
+
 
 \begin{twocolumns}
 
-% Table of contents
-$if(toc)$
-\clearpage
-\tableofcontents
-\thispagestyle{empty}
-\clearpage
-$endif$
+    \fullpagestart
+    $if(foreword)$
+    \input{foreword.tex}
+    $endif$
+    $if(credits)$
+    \input{credits.tex}
+    $endif$
+    \fullpageend
 
-% Content
-$body$
+    % Table of contents
+    $if(toc)$
+    \clearpage
+    \tableofcontents
+    \thispagestyle{empty}
+    \clearpage
+    $endif$
+
+    % Content
+    $body$
 \end{twocolumns}
 
 \end{document}

@@ -15,7 +15,7 @@ See the [example module](output/example.pdf)!
 
 ## Folder Structure
 
-```
+```plaintext
 ├── fonts/                           # Custom fonts for use in documents
 │   ├── Montserrat-Regular.ttf
 │   ├── Montserrat-Light.ttf
@@ -47,7 +47,7 @@ See the [example module](output/example.pdf)!
 2. Install LaTeX
     - **Linux**: Install TeX Live or another LaTeX distribution.
 
-      ```
+      ```plaintext
       sudo apt install texlive-xetex
       ```
 
@@ -57,7 +57,7 @@ See the [example module](output/example.pdf)!
    1. Install [pipx](https://pipx.pypa.io/en/stable/installation/) if you haven't already.
    2. Run the following command to install the filter:
 
-   ```
+   ```plaintext
    pipx install pandoc-latex-environment
    ```
 
@@ -81,7 +81,7 @@ title: Title of the Campaign
 subtitle: Subtitle of the Campaign
 author: Name of the Author
 toc: false
-cover-image: images/cover.png
+cover-image: images/example-image-0.png
 # Mandatory fields. Please do not remove.
 pandoc-latex-environment:
   squarebox: [squarebox]
@@ -141,6 +141,25 @@ This is a quote from a character in the campaign. *It should be visually distinc
 
 ```markdown
 > ***Note***: This is a quote from a character in the campaign. *It should be visually distinct from the rest of the text, perhaps with a different font or style*.
+```
+- For blocks that will be listed in the Table of Contents:
+```markdown
+::: rules
+title: Title
+A sidebar is a piece of text printed on a blue background. separate from the regular text. They will be listed in the TOC as 'Sidebar: Title'.
+:::
+```
+```markdown
+::: rules
+title: Title
+Sidebars like this one, in green, describe optional rules. They will be listed in the TOC as 'Optional Rule: Title'.
+:::
+```
+```markdown
+::: table
+title: Title
+Table that are important to be quickly referenced. They will be listed in the TOC as 'Table: Title'.
+:::
 ```
 
 ## Adversaries
@@ -211,8 +230,8 @@ From the project root, run:
 
 1. Run the following command to build the .html file
 
-```
-pandoc main.md --no-highlight --template=tex/template.tex --pdf-engine=xelatex --filter pandoc-latex-environment --lua-filter=filters/filters.lua -o output/main.pdf
+```plaintext
+pandoc main.md --syntax-highlighting=none --template=tex/template.tex --pdf-engine=xelatex --filter pandoc-latex-environment --lua-filter=filters/filters.lua -o output/main.pdf
 ```
 
 ## Helpful Tips
@@ -234,7 +253,4 @@ This project is not associated with or endorsed by the creators of Critical Role
 ### This template uses:
 
 - Montserrat font (Google Fonts, SIL Open Font License)
-- Merriweather font (Google Fonts, SIL Open Font License)
 - Eveleth Clean Regular (commercial font, not included—users must provide their own licensed copy).
-  - Add `Eveleth-Regular.ttf` to the `fonts/` directory.
-  - If not available, the template will use LeagueSpartan font (Google Fonts, SIL Open Font License) as a fallback.
